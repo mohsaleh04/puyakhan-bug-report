@@ -35,9 +35,9 @@ export const InputField: React.FC<InputFieldProps> = ({ id, label, type = "text"
       </label>
       <div className="relative">
       {isTextArea ? (
-        <textarea {...commonProps} rows={4} className={`${className} resize-none`}></textarea>
+        <textarea {...commonProps} name={id} rows={4} className={`${className} resize-none`}></textarea>
       ) : (
-        <input {...commonProps} type={type} className={className} />
+        <input {...commonProps} type={type} name={id} className={className} />
       )}
       </div>
       {error && <p className="mt-3 text-sm text-center text-white bg-red-500/90 backdrop-blur-sm rounded-lg py-1.5 px-3 font-semibold">{error}</p>}

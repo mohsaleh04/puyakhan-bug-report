@@ -21,6 +21,7 @@ export const OtpInput: React.FC<OtpInputProps> = ({ id, label, value, onChange, 
       <div className="relative">
         <input
           id={id}
+          name={id}
           type="tel"
           inputMode="numeric"
           autoComplete="one-time-code"

