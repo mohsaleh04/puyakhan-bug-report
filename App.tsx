@@ -41,7 +41,16 @@ const App: React.FC = () => {
     const value = urlParams.get('message');
     if (value) {
       try {
-        const decodedValue = atob(value);
+
+        const binaryValue = atob(value);
+        const bytes = new Uint8Array(binaryValue.length);
+        for (let i = 0; i < binaryValue.length; i++) {
+          bytes[i] = binaryValue.charCodeAt(i);
+        }
+
+        // 3. Decode Uint8Array to UTF-8 string
+        const decoder = new TextDecoder('utf-8');
+        const decodedValue = decoder.decode(bytes);
         setFormState({
           ...formState,
           "smsContent": decodedValue,
