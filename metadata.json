@@ -1,0 +1,5 @@
+{
+  "name": "OTP Bug Report",
+  "description": "A page for users to submit bug reports related to one-time passwords (OTP) in Persian. It features a modern UI for collecting user email, the problematic SMS, and the correct OTP.",
+  "requestFramePermissions": []
+}
