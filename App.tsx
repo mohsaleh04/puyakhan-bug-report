@@ -37,6 +37,19 @@ const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    const urlParams = new URLSearchParams(window.location.search);
+    const value = urlParams.get('message');
+    if (value) {
+      try {
+        const decodedValue = atob(value);
+        setFormState({
+          ...formState,
+          "smsContent": decodedValue,
+        })
+      } catch (error) {
+        console.error('Base64 decoding error:', error);
+      }
+    }
   }, [language, isRTL]);
 
   const [state, handleSubmission] = useForm("mblkoplg");
@@ -113,7 +126,7 @@ const App: React.FC = () => {
 
   return (
     <div className="font-vazir min-h-screen w-full bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600">
-      <main className="flex items-center justify-center w-full min-h-screen p-4 pb-28">
+      <main className="flex items-center justify-center w-full min-h-screen p-4 pb-16">
         <div className="mt-8 w-full max-w-md mx-auto bg-white/20 backdrop-blur-xl rounded-2xl shadow-2xl p-8 text-slate-800 border border-white/30">
           <div className="text-center mb-8 mt-2">
             <h1 className="font-bold text-3xl text-violet-900">{texts.title}</h1>
